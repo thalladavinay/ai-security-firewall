@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+python-multipart
+python-dotenv
+aiofiles
+requests
+pydantic
+email-validator
+passlib[bcrypt]
+python-jose[cryptography]
+bcrypt==4.0.1
+reportlab==4.4.3
+yara-python
+fastapi-mail
