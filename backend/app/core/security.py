@@ -22,7 +22,8 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(
 )
 
 print("=" * 50)
-print("SECRET_KEY:", SECRET_KEY)
+print("SECRET_KEY length:", len(SECRET_KEY) if SECRET_KEY else 0)
+print("SECRET_KEY starts with:", SECRET_KEY[:10] if SECRET_KEY else "None")
 print("ALGORITHM:", ALGORITHM)
 print("=" * 50)
 
