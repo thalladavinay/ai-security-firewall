@@ -41,24 +41,35 @@ export async function loginUser(
   email: string,
   password: string
 ) {
-  const response = await fetch(`${API_URL}/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  });
+  try {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
 
-  const data = await response.json().catch(() => ({}));
+    console.log("Status:", response.status);
 
-  if (!response.ok) {
-    throw new Error(data.detail || "Login failed.");
+    const text = await response.text();
+
+    console.log("Response:", text);
+
+    const data = text ? JSON.parse(text) : {};
+
+    if (!response.ok) {
+      throw new Error(data.detail || "Login failed.");
+    }
+
+    return data;
+  } catch (err) {
+    console.error("LOGIN ERROR:", err);
+    throw err;
   }
-
-  return data;
 }
 
 // Register
