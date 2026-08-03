@@ -11,6 +11,7 @@ def setup_cors(app: FastAPI) -> None:
         CORSMiddleware,
         allow_origins=[
             "http://localhost:3000",
+            "https://your-vercel-app.vercel.app",
         ],
         allow_credentials=True,
         allow_methods=["*"],
