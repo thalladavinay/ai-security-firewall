@@ -5,9 +5,13 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.security import hash_password
+
 from app.models.password_reset import PasswordReset
 from app.models.user import User
+
 from app.services.email_service import send_otp_email
+from app.services.audit_logger import create_audit_log
+
 from app.utils.otp import generate_otp
 
 router = APIRouter(
@@ -123,15 +127,6 @@ def reset_password(
             detail="Invalid OTP."
         )
 
-    if datetime.utcnow() - record.created_at > timedelta(minutes=10):
-        db.delete(record)
-        db.commit()
-
-        raise HTTPException(
-            status_code=400,
-            detail="OTP has expired."
-        )
-
     user = (
         db.query(User)
         .filter(User.email == email)
@@ -144,18 +139,18 @@ def reset_password(
             detail="User not found."
         )
 
-    # Password strength validation
-    if len(new_password) < 8:
-        raise HTTPException(
-            status_code=400,
-            detail="Password must contain at least 8 characters."
-        )
-
     user.hashed_password = hash_password(new_password)
 
     db.delete(record)
 
     db.commit()
+
+    create_audit_log(
+        db=db,
+        user_email=email,
+        action="PASSWORD RESET",
+        ip_address="Unknown",
+    )
 
     return {
         "message": "Password reset successful."

@@ -1,7 +1,7 @@
 export default function SettingsPage() {
   return (
-    <main className="p-8">
-      <h1 className="text-3xl font-bold">
+    <main className="p-4 md:p-8">
+      <h1 className="text-2xl md:text-3xl font-bold">
         Settings
       </h1>
 

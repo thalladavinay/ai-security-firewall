@@ -19,9 +19,9 @@ export default function StatsCard({
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -4, scale: 1.02 }}
       transition={{ duration: 0.3 }}
-      className="rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-lg"
+      className="rounded-xl border border-slate-700 bg-slate-900 p-6 shadow-lg"
     >
-      <h3 className="text-sm font-medium uppercase tracking-wide text-gray-400">
+      <h3 className="text-sm font-medium uppercase tracking-wide text-slate-300">
         {title}
       </h3>
 

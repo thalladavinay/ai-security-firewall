@@ -4,9 +4,9 @@ import Link from "next/link";
 
 export default function ForgotPasswordPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 px-6">
+    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-6">
       <div className="w-full max-w-md rounded-2xl bg-slate-900 p-8 shadow-lg">
-        <h1 className="text-3xl font-bold text-center text-cyan-400">
+        <h1 className="text-center text-3xl font-bold text-cyan-400">
           Forgot Password
         </h1>
 
@@ -17,20 +17,59 @@ export default function ForgotPasswordPage() {
 
         <form className="mt-8 space-y-5">
           <div>
-            <label className="block mb-2 text-sm text-gray-300">
+            <label
+              htmlFor="email"
+              className="mb-2 block text-sm text-gray-300"
+            >
               Email Address
             </label>
 
             <input
+              id="email"
               type="email"
+              aria-invalid={false}
               placeholder="Enter your email"
-              className="w-full rounded-lg bg-slate-800 border border-slate-700 p-3 text-white outline-none focus:border-cyan-400"
+              className="
+                w-full
+                rounded-lg
+                border
+                border-slate-700
+                bg-slate-800
+                p-3
+                text-white
+                outline-none
+                focus:border-cyan-400
+                focus:ring-2
+                focus:ring-cyan-500
+              "
             />
+
+            {/* Example error message (show only when validation fails) */}
+            {/*
+            <p
+              role="alert"
+              className="mt-2 text-sm text-red-400"
+            >
+              Invalid Email Address
+            </p>
+            */}
           </div>
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-cyan-500 py-3 font-semibold hover:bg-cyan-400 transition"
+            className="
+              w-full
+              rounded-lg
+              bg-cyan-500
+              py-3
+              font-semibold
+              text-black
+              transition
+              hover:bg-cyan-400
+              focus:outline-none
+              focus:ring-2
+              focus:ring-cyan-500
+            "
           >
             Send Reset Link
           </button>
@@ -39,20 +78,35 @@ export default function ForgotPasswordPage() {
         <div className="mt-6 text-center">
           <Link
             href="/login"
-            className="text-cyan-400 hover:underline"
+            className="
+              rounded
+              text-cyan-400
+              hover:underline
+              focus:outline-none
+              focus:ring-2
+              focus:ring-cyan-500
+            "
           >
             Back to Login
+          </Link>
+        </div>
+
+        <div className="mt-4 text-right">
+          <Link
+            href="/forgot-password"
+            className="
+              text-sm
+              text-cyan-400
+              hover:underline
+              focus:outline-none
+              focus:ring-2
+              focus:ring-cyan-500
+            "
+          >
+            Forgot Password?
           </Link>
         </div>
       </div>
     </div>
   );
 }
-<div className="text-right">
-  <Link
-    href="/forgot-password"
-    className="text-sm text-cyan-400 hover:underline"
-  >
-    Forgot Password?
-  </Link>
-</div>

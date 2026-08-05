@@ -16,7 +16,9 @@ function getAuthHeaders(): HeadersInit {
     : {};
 }
 
+// ==========================
 // Upload File
+// ==========================
 export async function uploadFile(file: File) {
   const formData = new FormData();
   formData.append("file", file);
@@ -36,7 +38,9 @@ export async function uploadFile(file: File) {
   return data;
 }
 
+// ==========================
 // Login
+// ==========================
 export async function loginUser(
   email: string,
   password: string
@@ -72,7 +76,9 @@ export async function loginUser(
   }
 }
 
+// ==========================
 // Register
+// ==========================
 export async function registerUser(user: {
   username: string;
   email: string;
@@ -88,63 +94,129 @@ export async function registerUser(user: {
 
   const data = await response.json().catch(() => ({}));
 
-if (!response.ok) {
-  let message = "Registration failed.";
+  if (!response.ok) {
+    let message = "Registration failed.";
 
-  if (typeof data.detail === "string") {
-    message = data.detail;
-  } else if (Array.isArray(data.detail)) {
-    message = data.detail.map((e: any) => e.msg).join(", ");
+    if (typeof data.detail === "string") {
+      message = data.detail;
+    } else if (Array.isArray(data.detail)) {
+      message = data.detail.map((e: any) => e.msg).join(", ");
+    }
+
+    throw new Error(message);
   }
-
-  throw new Error(message);
-}
 
   return data;
 }
 
+// ==========================
 // Dashboard Stats
+// ==========================
 export async function getDashboardStats() {
-  const response = await fetch(`${API_URL}/dashboard/stats/`, {
-    headers: getAuthHeaders(),
-  });
+  const response = await fetch(
+    `${API_URL}/dashboard/stats/`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
 
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(data.detail || "Unable to load dashboard.");
+    throw new Error(
+      data.detail || "Unable to load dashboard."
+    );
   }
 
   return data;
 }
 
+// ==========================
 // Recent Scans
+// ==========================
 export async function getRecentScans() {
-  const response = await fetch(`${API_URL}/dashboard/recent`, {
-    headers: getAuthHeaders(),
-  });
+  const response = await fetch(
+    `${API_URL}/dashboard/recent`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
 
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(data.detail || "Unable to load recent scans.");
+    throw new Error(
+      data.detail || "Unable to load recent scans."
+    );
   }
 
   return data;
 }
 
-
-// History
+// ==========================
+// Scan History
+// ==========================
 export async function getScanHistory() {
-  const response = await fetch(`${API_URL}/history/`, {
-    method: "GET",
-    headers: getAuthHeaders(),
-  });
+  const response = await fetch(
+    `${API_URL}/history/`,
+    {
+      method: "GET",
+      headers: getAuthHeaders(),
+    }
+  );
 
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(data.detail || "Failed to load scan history.");
+    throw new Error(
+      data.detail || "Failed to load scan history."
+    );
+  }
+
+  return data;
+}
+
+// ==========================
+// Risk Trend Chart
+// ==========================
+export async function getRiskTrend() {
+  const response = await fetch(
+    `${API_URL}/analytics/risk-trend`,
+    {
+      method: "GET",
+      headers: getAuthHeaders(),
+    }
+  );
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(
+      data.detail || "Unable to load risk trend."
+    );
+  }
+
+  return data;
+}
+
+// ==========================
+// Notifications
+// ==========================
+export async function getNotifications() {
+  const response = await fetch(
+    `${API_URL}/notifications/`,
+    {
+      method: "GET",
+      headers: getAuthHeaders(),
+    }
+  );
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(
+      data.detail || "Unable to load notifications."
+    );
   }
 
   return data;

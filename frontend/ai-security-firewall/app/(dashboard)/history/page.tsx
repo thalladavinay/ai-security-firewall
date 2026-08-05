@@ -64,9 +64,8 @@ export default function HistoryPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black p-8 text-white">
-      <h1 className="mb-8 text-4xl font-bold text-cyan-400">
-        Scan History
+    <main className="min-h-screen bg-black p-4 md:p-8 text-white">
+      <h1 className="mb-8 text-2xl md:text-4xl font-bold text-cyan-400">        Scan History
       </h1>
 
       <input
@@ -83,7 +82,7 @@ export default function HistoryPage() {
         </div>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-slate-800">
-          <Table>
+          <Table aria-label="Scan History">
             <TableHeader>
               <TableRow>
                 <TableHead>File</TableHead>

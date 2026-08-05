@@ -54,7 +54,10 @@ export default function LoginPage() {
         </p>
 
         {error && (
-          <div className="mb-5 rounded-lg bg-red-500/10 p-3 text-center text-red-400">
+          <div
+            role="alert"
+            className="mb-5 rounded-lg bg-red-500/10 p-3 text-center text-red-400"
+          >
             {error}
           </div>
         )}
@@ -63,40 +66,100 @@ export default function LoginPage() {
           onSubmit={handleSubmit}
           className="space-y-5"
         >
+          {/* Email */}
           <div>
-            <label className="mb-2 block text-sm text-gray-300">
+            <label
+              htmlFor="email"
+              className="mb-2 block text-sm text-gray-300"
+            >
               Email
             </label>
 
             <input
+              id="email"
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-cyan-500"
+              aria-invalid={error ? true : false}
+              className="
+                w-full
+                rounded-lg
+                border
+                border-slate-700
+                bg-slate-800
+                px-4
+                py-3
+                text-white
+                focus:outline-none
+                focus:ring-2
+                focus:ring-cyan-500
+              "
               placeholder="Enter your email"
             />
           </div>
 
+          {/* Password */}
           <div>
-            <label className="mb-2 block text-sm text-gray-300">
+            <label
+              htmlFor="password"
+              className="mb-2 block text-sm text-gray-300"
+            >
               Password
             </label>
 
             <input
+              id="password"
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-cyan-500"
+              aria-invalid={error ? true : false}
+              className="
+                w-full
+                rounded-lg
+                border
+                border-slate-700
+                bg-slate-800
+                px-4
+                py-3
+                text-white
+                focus:outline-none
+                focus:ring-2
+                focus:ring-cyan-500
+              "
               placeholder="Enter your password"
             />
+          </div>
+
+          {/* Forgot Password */}
+          <div className="text-right">
+            <Link
+              href="/forgot-password"
+              className="text-sm text-cyan-400 hover:underline rounded focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            >
+              Forgot Password?
+            </Link>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-cyan-500 py-3 font-semibold text-black transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
+            className="
+              w-full
+              rounded-lg
+              bg-cyan-500
+              py-3
+              font-semibold
+              text-black
+              transition
+              hover:bg-cyan-400
+              focus:outline-none
+              focus:ring-2
+              focus:ring-cyan-500
+              disabled:cursor-not-allowed
+              disabled:opacity-60
+            "
           >
             {loading ? "Signing In..." : "Login"}
           </button>
@@ -106,7 +169,15 @@ export default function LoginPage() {
           Don't have an account?{" "}
           <Link
             href="/register"
-            className="font-semibold text-cyan-400 hover:underline"
+            className="
+              font-semibold
+              text-cyan-400
+              hover:underline
+              rounded
+              focus:outline-none
+              focus:ring-2
+              focus:ring-cyan-500
+            "
           >
             Register
           </Link>

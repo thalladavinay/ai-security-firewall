@@ -28,9 +28,18 @@ class Scan(Base):
         nullable=False,
     )
 
+    # SHA-256 hash of the uploaded file
+    file_hash = Column(
+        String,
+        unique=True,
+        nullable=False,
+    )
+
+    # Path to the generated PDF report
     report_path = Column(
         String,
-        nullable=False,
+        nullable=True,
+        default=None,
     )
 
     user_id = Column(

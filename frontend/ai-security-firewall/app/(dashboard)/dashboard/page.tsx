@@ -69,19 +69,46 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center text-white text-xl">
+      <div className="flex h-screen items-center justify-center text-xl text-white">
         Loading Dashboard...
       </div>
     );
   }
 
   return (
-    <main className="mx-auto max-w-7xl p-8">
-      <h1 className="mb-8 text-4xl font-bold text-white">
+    <main className="mx-auto max-w-7xl p-4 md:p-8">
+
+      {/* Dashboard Title */}
+      <h1 className="mb-4 text-2xl font-bold text-white md:text-4xl">
         Dashboard
       </h1>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {/* Export Buttons */}
+      <div className="mb-8 flex flex-wrap gap-4">
+        <button
+  aria-label="Export dashboard as PDF"
+  className="rounded-lg bg-red-500 px-5 py-2 font-semibold text-white transition hover:bg-red-600"
+>
+  Export PDF
+</button>
+
+        <button
+  aria-label="Export dashboard as CSV"
+  className="rounded-lg bg-green-500 px-5 py-2 font-semibold text-white transition hover:bg-green-600"
+>
+  Export CSV
+</button>
+
+       <button
+  aria-label="Export dashboard as Excel"
+  className="rounded-lg bg-blue-500 px-5 py-2 font-semibold text-white transition hover:bg-blue-600"
+>
+  Export Excel
+</button>
+      </div>
+
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           title="Total Scans"
           value={stats.total_scans}
@@ -107,7 +134,8 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className="mt-10">
+      {/* Dashboard Chart */}
+      <div className="mt-10 w-full overflow-x-auto">
         <DashboardChart
           safe={stats.safe_files}
           warning={stats.warning_files}
@@ -115,13 +143,14 @@ export default function DashboardPage() {
         />
       </div>
 
+      {/* Recent Activity */}
       <div className="mt-10 rounded-xl bg-slate-900 p-6">
-        <h2 className="mb-6 text-2xl font-bold text-white">
+        <h2 className="mb-6 text-xl font-bold text-white md:text-2xl">
           Recent Activity
         </h2>
 
         {recentScans.length === 0 ? (
-          <p className="text-center text-gray-400">
+          <p className="text-center text-slate-200">
             No recent scans available.
           </p>
         ) : (
@@ -129,14 +158,14 @@ export default function DashboardPage() {
             {recentScans.map((scan) => (
               <div
                 key={scan.id}
-                className="flex items-center justify-between rounded-lg border border-slate-700 p-4"
+                className="flex flex-col gap-3 rounded-lg border border-slate-700 p-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
                   <p className="font-semibold text-white">
                     {scan.filename}
                   </p>
 
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-white">
                     Risk Score: {scan.risk_score}
                   </p>
                 </div>
@@ -148,7 +177,8 @@ export default function DashboardPage() {
         )}
       </div>
 
-      <div className="mt-10">
+      {/* Threat Summary */}
+      <div className="mt-10 overflow-x-auto">
         <ThreatSummary
           malware={stats.malicious_files}
           phishing={stats.warning_files}
@@ -157,15 +187,17 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className="mt-8 rounded-lg bg-slate-900 p-4 text-center">
-        <p className="text-gray-300">
-          Average Risk Score
-        </p>
+      {/* Average Risk */}
+      <div className="mt-8 rounded-lg border border-slate-700 bg-slate-900 p-4 text-center">
+       <p className="text-slate-200">
+    Average Risk Score
+</p>
 
-        <p className="mt-2 text-3xl font-bold text-cyan-400">
+        <p className="mt-2 text-2xl font-bold text-cyan-400 md:text-3xl">
           {stats.average_risk_score}
         </p>
       </div>
+
     </main>
   );
 }

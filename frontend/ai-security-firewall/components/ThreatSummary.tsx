@@ -15,28 +15,28 @@ export default function ThreatSummary({
     malware + phishing + promptInjection;
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg">
-      <h2 className="mb-6 text-2xl font-bold text-cyan-400">
+    <div className="rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-lg">
+      <h2 className="mb-6 text-xl md:text-2xl font-bold text-cyan-400">
         Threat Summary
       </h2>
 
       <div className="space-y-4">
         <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-          <span className="text-gray-300">Malware</span>
+          <span className="text-slate-200">Malware</span>
           <span className="font-semibold text-red-400">
             {malware}
           </span>
         </div>
 
         <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-          <span className="text-gray-300">Phishing</span>
+          <span className="text-slate-200">Phishing</span>
           <span className="font-semibold text-yellow-400">
             {phishing}
           </span>
         </div>
 
         <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-          <span className="text-gray-300">
+          <span className="text-slate-200">
             Prompt Injection
           </span>
           <span className="font-semibold text-orange-400">
@@ -45,13 +45,13 @@ export default function ThreatSummary({
         </div>
 
         <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-          <span className="text-gray-300">Safe Files</span>
+          <span className="text-slate-200">Safe Files</span>
           <span className="font-semibold text-green-400">
             {safe}
           </span>
         </div>
 
-        <div className="mt-4 flex items-center justify-between rounded-lg bg-slate-800 p-3">
+        <div className="mt-4 flex items-center justify-between rounded-lg border border-slate-700 bg-slate-800 p-3">
           <span className="font-semibold text-white">
             Total Threats
           </span>

@@ -2,8 +2,8 @@
 
 export default function ReportsPage() {
   return (
-    <main className="min-h-screen bg-black p-8 text-white">
-      <h1 className="mb-8 text-4xl font-bold text-cyan-400">
+    <main className="min-h-screen bg-black p-4 md:p-8 text-white">
+      <h1 className="mb-8 text-2xl md:text-4xl font-bold text-cyan-400">
         Security Reports
       </h1>
 
