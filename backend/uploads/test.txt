@@ -1,0 +1,24 @@
+PATTERNS = [
+    "ignore previous instructions",
+    "ignore all previous instructions",
+    "developer mode",
+    "jailbreak",
+    "system prompt",
+    "reveal your prompt",
+    "click here",
+    "reset password",
+    "disable safety",
+    "bypass",
+    "execute command",
+    "run shell",
+    "sudo",
+    "rm -rf",
+
+    # PowerShell patterns
+    "invoke-expression",
+    "iex",
+    "invoke-webrequest",
+    "downloadstring",
+    "start-process",
+    "new-object system.net.webclient",
+]

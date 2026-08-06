@@ -135,7 +135,7 @@ async def upload_file(
         # Audit log
         create_audit_log(
             db=db,
-            user_email=current_user["email"],
+            user_email=current_user["sub"],
             action="UPLOAD",
             ip_address=request.client.host,
         )

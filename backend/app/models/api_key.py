@@ -8,7 +8,6 @@ from sqlalchemy import (
     Integer,
     String,
 )
-
 from sqlalchemy.orm import relationship
 
 from app.core.database import Base
@@ -32,13 +31,6 @@ class APIKey(Base):
         String,
         unique=True,
         nullable=False,
-        index=True,
-    )
-
-    organization_id = Column(
-        Integer,
-        ForeignKey("organizations.id"),
-        nullable=True,
         index=True,
     )
 
@@ -75,11 +67,6 @@ class APIKey(Base):
         Integer,
         default=0,
         nullable=False,
-    )
-
-    organization = relationship(
-        "Organization",
-        backref="api_keys",
     )
 
     user = relationship(

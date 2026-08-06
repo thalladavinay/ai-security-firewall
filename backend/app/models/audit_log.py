@@ -1,5 +1,12 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text
 from datetime import datetime
+
+from sqlalchemy import (
+    Column,
+    DateTime,
+    Integer,
+    String,
+    Text,
+)
 
 from app.core.database import Base
 
@@ -10,20 +17,32 @@ class AuditLog(Base):
     id = Column(
         Integer,
         primary_key=True,
-        index=True
+        index=True,
+    )
+
+    user_email = Column(
+        String,
+        nullable=True,
+        index=True,
     )
 
     action = Column(
         String,
-        nullable=False
+        nullable=False,
     )
 
     description = Column(
         Text,
-        nullable=True
+        nullable=True,
+    )
+
+    ip_address = Column(
+        String,
+        nullable=True,
     )
 
     created_at = Column(
         DateTime,
-        default=datetime.utcnow
+        default=datetime.utcnow,
+        nullable=False,
     )

@@ -80,19 +80,3 @@ class Scan(Base):
         "User",
         back_populates="scans",
     )
-
-    # =====================================
-    # Organization Relationship
-    # =====================================
-
-    organization_id = Column(
-        Integer,
-        ForeignKey("organizations.id"),
-        nullable=True,
-        index=True,
-    )
-
-    organization = relationship(
-        "Organization",
-        back_populates="scans",
-    )
