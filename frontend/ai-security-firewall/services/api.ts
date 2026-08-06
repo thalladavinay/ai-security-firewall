@@ -1,12 +1,16 @@
-// const API_URL =
-//   process.env.NEXT_PUBLIC_API_URL ??
-//   "http://localhost:8000";
+// ==========================
+// API Base URL
+// ==========================
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ??
+  "http://127.0.0.1:8000/api/v1";
+
 
 // ==========================
 // Auth Header
 // ==========================
+
 function getAuthHeaders(): HeadersInit {
   if (typeof window === "undefined") {
     return {};
@@ -21,9 +25,11 @@ function getAuthHeaders(): HeadersInit {
     : {};
 }
 
+
 // ==========================
 // Handle API Response
 // ==========================
+
 async function handleResponse(response: Response) {
   const data = await response.json().catch(() => ({}));
 
@@ -36,30 +42,39 @@ async function handleResponse(response: Response) {
   return data;
 }
 
+
 // ==========================
 // Upload File
 // ==========================
+
 export async function uploadFile(file: File) {
   const formData = new FormData();
+
   formData.append("file", file);
 
   try {
-    const response = await fetch(`${API_URL}/upload`, {
-      method: "POST",
-      headers: getAuthHeaders(),
-      body: formData,
-    });
+    const response = await fetch(
+      `${API_URL}/upload`,
+      {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: formData,
+      }
+    );
 
     return await handleResponse(response);
+
   } catch (error) {
     console.error("UPLOAD ERROR:", error);
     throw error;
   }
 }
 
+
 // ==========================
 // Login
 // ==========================
+
 export async function loginUser(
   email: string,
   password: string
@@ -69,9 +84,11 @@ export async function loginUser(
       `${API_URL}/auth/login`,
       {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({
           email,
           password,
@@ -79,7 +96,9 @@ export async function loginUser(
       }
     );
 
+
     const data = await handleResponse(response);
+
 
     if (data.access_token) {
       localStorage.setItem(
@@ -88,44 +107,63 @@ export async function loginUser(
       );
     }
 
+
     return data;
+
+
   } catch (error) {
+
     console.error("LOGIN ERROR:", error);
     throw error;
+
   }
 }
+
 
 // ==========================
 // Register
 // ==========================
+
 export async function registerUser(user: {
   username: string;
   email: string;
   password: string;
 }) {
+
   try {
+
     const response = await fetch(
       `${API_URL}/auth/register`,
       {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify(user),
       }
     );
 
+
     return await handleResponse(response);
+
+
   } catch (error) {
+
     console.error("REGISTER ERROR:", error);
     throw error;
+
   }
 }
+
 
 // ==========================
 // Dashboard Stats
 // ==========================
+
 export async function getDashboardStats() {
+
   const response = await fetch(
     `${API_URL}/dashboard/stats`,
     {
@@ -133,13 +171,17 @@ export async function getDashboardStats() {
     }
   );
 
+
   return handleResponse(response);
 }
+
 
 // ==========================
 // Recent Scans
 // ==========================
+
 export async function getRecentScans() {
+
   const response = await fetch(
     `${API_URL}/dashboard/recent`,
     {
@@ -147,27 +189,35 @@ export async function getRecentScans() {
     }
   );
 
+
   return handleResponse(response);
 }
+
 
 // ==========================
 // Scan History
 // ==========================
+
 export async function getScanHistory() {
+
   const response = await fetch(
-    `${API_URL}/history`,
+    `${API_URL}/history/`,
     {
       headers: getAuthHeaders(),
     }
   );
 
+
   return handleResponse(response);
 }
+
 
 // ==========================
 // Risk Trend
 // ==========================
+
 export async function getRiskTrend() {
+
   const response = await fetch(
     `${API_URL}/analytics/risk-trend`,
     {
@@ -175,13 +225,17 @@ export async function getRiskTrend() {
     }
   );
 
+
   return handleResponse(response);
 }
+
 
 // ==========================
 // Notifications
 // ==========================
+
 export async function getNotifications() {
+
   const response = await fetch(
     `${API_URL}/notifications`,
     {
@@ -189,21 +243,26 @@ export async function getNotifications() {
     }
   );
 
+
   return handleResponse(response);
 }
+
 
 // ==========================
 // Job Status
 // ==========================
+
 export async function getJob(
   jobId: string | number
 ) {
+
   const response = await fetch(
     `${API_URL}/jobs/${jobId}`,
     {
       headers: getAuthHeaders(),
     }
   );
+
 
   return handleResponse(response);
 }
