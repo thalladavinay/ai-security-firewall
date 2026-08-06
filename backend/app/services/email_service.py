@@ -71,3 +71,5 @@ AI Security Firewall
     except Exception as e:
         print("❌ Verification email failed:", e)
         raise
+    
+   

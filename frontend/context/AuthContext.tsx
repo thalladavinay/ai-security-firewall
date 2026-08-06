@@ -10,7 +10,7 @@ import {
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  login: () => void;
+  login: (token: string) => void;
   logout: () => void;
 }
 
@@ -28,11 +28,11 @@ export function AuthProvider({
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    setIsLoggedIn(!!localStorage.getItem("token"));
   }, []);
 
-  const login = () => {
+  const login = (token: string) => {
+    localStorage.setItem("token", token);
     setIsLoggedIn(true);
   };
 

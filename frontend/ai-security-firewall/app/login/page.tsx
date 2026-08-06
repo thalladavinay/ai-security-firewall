@@ -30,7 +30,8 @@ export default function LoginPage() {
 
       login(data.access_token);
 
-      router.push("/dashboard");
+      router.replace("/dashboard");
+router.refresh();
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);

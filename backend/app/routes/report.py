@@ -11,7 +11,7 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.auth import get_current_user
+from app.core.dependencies import get_current_user
 
 from app.services.audit_logger import create_audit_log
 from app.services.notification_service import create_notification

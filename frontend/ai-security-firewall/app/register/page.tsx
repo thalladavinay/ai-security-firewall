@@ -39,7 +39,7 @@ export default function RegisterPage() {
         password,
       });
 
-      router.push("/login");
+      router.replace("/login");
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);

@@ -21,9 +21,9 @@ def admin_dashboard(
     current_user=Depends(get_admin),
 ):
     return {
-        "message": "Welcome Admin",
-        "admin": current_user.username,
-    }
+    "message": "Welcome Admin",
+    "admin": current_user["username"],
+}
 
 
 # ----------------------------

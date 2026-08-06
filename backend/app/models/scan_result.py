@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.core.database import Base
@@ -16,16 +16,19 @@ class Scan(Base):
     filename = Column(
         String,
         nullable=False,
+        index=True,
     )
 
     status = Column(
         String,
         nullable=False,
+        default="Pending",
     )
 
     risk_score = Column(
         Integer,
         nullable=False,
+        default=0,
     )
 
     # SHA-256 hash of the uploaded file
@@ -46,6 +49,7 @@ class Scan(Base):
         Integer,
         ForeignKey("users.id"),
         nullable=True,
+        index=True,
     )
 
     user = relationship(

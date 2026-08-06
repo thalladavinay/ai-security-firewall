@@ -1,4 +1,5 @@
 import secrets
+from urllib import request
 
 from fastapi import (
     APIRouter,
@@ -12,7 +13,7 @@ from pydantic import BaseModel
 
 from app.core.database import get_db
 from app.core.limiter import limiter
-from app.core.auth import get_current_user
+from app.core.dependencies import get_current_user
 from app.core.security import (
     create_access_token,
     hash_password,
@@ -22,7 +23,7 @@ from app.core.security import (
 from app.models.user import User
 from app.models.email_verification import EmailVerification
 
-from app.schemas.token import Token
+from app.schemas.auth import Token
 from app.schemas.user import (
     UserLogin,
     UserRegister,
@@ -107,8 +108,8 @@ async def register_user(
     # ----------------------------------------
 
     verification_link = (
-        f"http://localhost:3000/verify?token={token}"
-    )
+    f"{FRONTEND_URL}/verify?token={token}"
+)
 
     # ----------------------------------------
     # Send verification email
@@ -293,7 +294,7 @@ def change_password(
         db=db,
         user_email=user.email,
         action="PASSWORD CHANGE",
-        ip_address="Unknown",
+        ip_address=request.client.host,
     )
 
     # ----------------------------------------

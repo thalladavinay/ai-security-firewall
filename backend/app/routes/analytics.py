@@ -20,10 +20,11 @@ def risk_trend(
 
     today = datetime.utcnow().date()
 
-    daily = 0
-    weekly = 0
-    monthly = 0
-
+    return {
+        "daily": total,
+        "weekly": total,
+        "monthly": total,
+    }
     for scan in scans:
 
         created = (

@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from typing import Optional
 import os
 
@@ -21,12 +21,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(
     os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60)
 )
 
-print("=" * 50)
-print("SECRET_KEY length:", len(SECRET_KEY) if SECRET_KEY else 0)
-print("SECRET_KEY starts with:", SECRET_KEY[:10] if SECRET_KEY else "None")
-print("ALGORITHM:", ALGORITHM)
-print("=" * 50)
-
 # Password hashing
 pwd_context = CryptContext(
     schemes=["bcrypt"],
@@ -41,11 +35,17 @@ def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def verify_password(password: str, hashed_password: str) -> bool:
+def verify_password(
+    password: str,
+    hashed_password: str,
+) -> bool:
     """
     Verify a password against its hashed value.
     """
-    return pwd_context.verify(password, hashed_password)
+    return pwd_context.verify(
+        password,
+        hashed_password,
+    )
 
 
 def create_access_token(
@@ -57,10 +57,12 @@ def create_access_token(
     """
     to_encode = data.copy()
 
-    expire = datetime.utcnow() + (
+    expire = datetime.now(UTC) + (
         expires_delta
         if expires_delta
-        else timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        else timedelta(
+            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+        )
     )
 
     to_encode.update({"exp": expire})
@@ -72,10 +74,13 @@ def create_access_token(
     )
 
 
-def decode_access_token(token: str) -> Optional[dict]:
+def decode_access_token(
+    token: str,
+) -> Optional[dict]:
     """
     Decode and validate a JWT.
-    Returns the payload if valid, otherwise None.
+    Returns the payload if valid,
+    otherwise None.
     """
     try:
         payload = jwt.decode(
@@ -84,5 +89,6 @@ def decode_access_token(token: str) -> Optional[dict]:
             algorithms=[ALGORITHM],
         )
         return payload
+
     except JWTError:
         return None

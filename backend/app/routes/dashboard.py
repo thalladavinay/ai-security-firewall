@@ -1,11 +1,11 @@
-from app.core.auth import get_current_user
+
 from fastapi import APIRouter, Depends
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.models.scan_result import Scan
-from app.core.auth import get_current_user
+from app.core.dependencies import get_current_user
 
 router = APIRouter(
     prefix="/dashboard",
@@ -60,7 +60,7 @@ def get_dashboard_stats(
 )
     danger_files = db.query(Scan).filter(
    Scan.user_id == current_user["id"],
-    Scan.status == "danger"
+    Scan.status == "danger_files"
 ).count()
 
     return {

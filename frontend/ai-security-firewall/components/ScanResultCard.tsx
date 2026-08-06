@@ -2,11 +2,12 @@ import {
   ShieldAlert,
   ShieldCheck,
   ShieldQuestion,
+  ShieldX,
 } from "lucide-react";
 
 interface Props {
   fileName: string;
-  status: "Safe" | "Warning" | "Malicious";
+  status: string;
   risk: number;
 }
 
@@ -15,20 +16,41 @@ export default function ScanResultCard({
   status,
   risk,
 }: Props) {
-  const statusConfig = {
-    Safe: {
-      color: "text-green-400",
-      icon: <ShieldCheck className="text-green-500" />,
-    },
-    Warning: {
-      color: "text-yellow-400",
-      icon: <ShieldQuestion className="text-yellow-500" />,
-    },
-    Malicious: {
-      color: "text-red-400",
-      icon: <ShieldAlert className="text-red-500" />,
-    },
+  const normalizedStatus = status.toLowerCase();
+
+  let config: {
+    color: string;
+    icon: React.ReactNode;
   };
+
+  switch (normalizedStatus) {
+    case "safe":
+      config = {
+        color: "text-green-400",
+        icon: <ShieldCheck className="text-green-500" />,
+      };
+      break;
+
+    case "warning":
+      config = {
+        color: "text-yellow-400",
+        icon: <ShieldQuestion className="text-yellow-500" />,
+      };
+      break;
+
+    case "malicious":
+      config = {
+        color: "text-red-400",
+        icon: <ShieldAlert className="text-red-500" />,
+      };
+      break;
+
+    default:
+      config = {
+        color: "text-gray-400",
+        icon: <ShieldX className="text-gray-500" />,
+      };
+  }
 
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg">
@@ -37,14 +59,12 @@ export default function ScanResultCard({
           {fileName}
         </h2>
 
-        {statusConfig[status].icon}
+        {config.icon}
       </div>
 
       <p className="mt-4 text-gray-400">
         Status:
-        <span
-          className={`ml-2 font-bold ${statusConfig[status].color}`}
-        >
+        <span className={`ml-2 font-bold ${config.color}`}>
           {status}
         </span>
       </p>

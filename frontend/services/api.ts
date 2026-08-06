@@ -1,4 +1,6 @@
-const API_URL = "http://localhost:8000";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ??
+  "http://localhost:8000";
 
 // Upload File API
 export async function uploadFile(file: File) {

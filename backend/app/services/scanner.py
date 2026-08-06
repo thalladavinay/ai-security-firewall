@@ -1,6 +1,6 @@
 import os
 
-from app.schemas.scan_result import ScanResult
+from app.schemas.scan import ScanResult
 from app.services.clamav_scanner import scan_with_clamav
 from app.services.yara_scanner import scan_with_yara
 

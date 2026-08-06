@@ -1,7 +1,12 @@
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ??
-  "http://localhost:8000";
+// const API_URL =
+//   process.env.NEXT_PUBLIC_API_URL ??
+//   "http://localhost:8000";
 
+const API_URL = "http://127.0.0.1:8000";
+
+// ==========================
+// Auth Header
+// ==========================
 function getAuthHeaders(): HeadersInit {
   if (typeof window === "undefined") {
     return {};
@@ -17,25 +22,39 @@ function getAuthHeaders(): HeadersInit {
 }
 
 // ==========================
+// Handle API Response
+// ==========================
+async function handleResponse(response: Response) {
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(
+      data.detail || "Something went wrong."
+    );
+  }
+
+  return data;
+}
+
+// ==========================
 // Upload File
 // ==========================
 export async function uploadFile(file: File) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await fetch(`${API_URL}/upload`, {
-    method: "POST",
-    headers: getAuthHeaders(),
-    body: formData,
-  });
+  try {
+    const response = await fetch(`${API_URL}/upload`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: formData,
+    });
 
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    throw new Error(data.detail || "Upload failed.");
+    return await handleResponse(response);
+  } catch (error) {
+    console.error("UPLOAD ERROR:", error);
+    throw error;
   }
-
-  return data;
 }
 
 // ==========================
@@ -46,33 +65,33 @@ export async function loginUser(
   password: string
 ) {
   try {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
+    const response = await fetch(
+      `${API_URL}/auth/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      }
+    );
 
-    console.log("Status:", response.status);
+    const data = await handleResponse(response);
 
-    const text = await response.text();
-
-    console.log("Response:", text);
-
-    const data = text ? JSON.parse(text) : {};
-
-    if (!response.ok) {
-      throw new Error(data.detail || "Login failed.");
+    if (data.access_token) {
+      localStorage.setItem(
+        "token",
+        data.access_token
+      );
     }
 
     return data;
-  } catch (err) {
-    console.error("LOGIN ERROR:", err);
-    throw err;
+  } catch (error) {
+    console.error("LOGIN ERROR:", error);
+    throw error;
   }
 }
 
@@ -84,29 +103,23 @@ export async function registerUser(user: {
   email: string;
   password: string;
 }) {
-  const response = await fetch(`${API_URL}/auth/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(user),
-  });
+  try {
+    const response = await fetch(
+      `${API_URL}/auth/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      }
+    );
 
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    let message = "Registration failed.";
-
-    if (typeof data.detail === "string") {
-      message = data.detail;
-    } else if (Array.isArray(data.detail)) {
-      message = data.detail.map((e: any) => e.msg).join(", ");
-    }
-
-    throw new Error(message);
+    return await handleResponse(response);
+  } catch (error) {
+    console.error("REGISTER ERROR:", error);
+    throw error;
   }
-
-  return data;
 }
 
 // ==========================
@@ -114,21 +127,13 @@ export async function registerUser(user: {
 // ==========================
 export async function getDashboardStats() {
   const response = await fetch(
-    `${API_URL}/dashboard/stats/`,
+    `${API_URL}/dashboard/stats`,
     {
       headers: getAuthHeaders(),
     }
   );
 
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    throw new Error(
-      data.detail || "Unable to load dashboard."
-    );
-  }
-
-  return data;
+  return handleResponse(response);
 }
 
 // ==========================
@@ -142,15 +147,7 @@ export async function getRecentScans() {
     }
   );
 
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    throw new Error(
-      data.detail || "Unable to load recent scans."
-    );
-  }
-
-  return data;
+  return handleResponse(response);
 }
 
 // ==========================
@@ -158,45 +155,27 @@ export async function getRecentScans() {
 // ==========================
 export async function getScanHistory() {
   const response = await fetch(
-    `${API_URL}/history/`,
+    `${API_URL}/history`,
     {
-      method: "GET",
       headers: getAuthHeaders(),
     }
   );
 
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    throw new Error(
-      data.detail || "Failed to load scan history."
-    );
-  }
-
-  return data;
+  return handleResponse(response);
 }
 
 // ==========================
-// Risk Trend Chart
+// Risk Trend
 // ==========================
 export async function getRiskTrend() {
   const response = await fetch(
     `${API_URL}/analytics/risk-trend`,
     {
-      method: "GET",
       headers: getAuthHeaders(),
     }
   );
 
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    throw new Error(
-      data.detail || "Unable to load risk trend."
-    );
-  }
-
-  return data;
+  return handleResponse(response);
 }
 
 // ==========================
@@ -204,20 +183,27 @@ export async function getRiskTrend() {
 // ==========================
 export async function getNotifications() {
   const response = await fetch(
-    `${API_URL}/notifications/`,
+    `${API_URL}/notifications`,
     {
-      method: "GET",
       headers: getAuthHeaders(),
     }
   );
 
-  const data = await response.json().catch(() => ({}));
+  return handleResponse(response);
+}
 
-  if (!response.ok) {
-    throw new Error(
-      data.detail || "Unable to load notifications."
-    );
-  }
+// ==========================
+// Job Status
+// ==========================
+export async function getJob(
+  jobId: string | number
+) {
+  const response = await fetch(
+    `${API_URL}/jobs/${jobId}`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
 
-  return data;
+  return handleResponse(response);
 }

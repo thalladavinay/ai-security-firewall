@@ -1,6 +1,5 @@
 "use client";
 
-
 import {
   createContext,
   useContext,
@@ -9,59 +8,90 @@ import {
   ReactNode,
 } from "react";
 
+
 interface AuthContextType {
   isLoggedIn: boolean;
-  token: string | null;
   login: (token: string) => void;
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType>({
-  isLoggedIn: false,
-  token: null,
-  login: () => {},
-  logout: () => {},
-});
+
+const AuthContext =
+  createContext<AuthContextType>({
+    isLoggedIn: false,
+    login: () => {},
+    logout: () => {},
+  });
+
+
 
 export function AuthProvider({
   children,
 }: {
   children: ReactNode;
 }) {
-  const [token, setToken] = useState<string | null>(null);
 
-  useEffect(() => {
-    const savedToken = localStorage.getItem("token");
+  const [isLoggedIn,setIsLoggedIn] =
+    useState(false);
 
-    if (savedToken) {
-      setToken(savedToken);
-    }
-  }, []);
 
-  const login = (newToken: string) => {
-    localStorage.setItem("token", newToken);
-    setToken(newToken);
-  };
+  useEffect(()=>{
 
-  const logout = () => {
+    const token =
+      localStorage.getItem("token");
+
+    setIsLoggedIn(Boolean(token));
+
+  },[]);
+
+
+
+  function login(token:string){
+
+    localStorage.setItem(
+      "token",
+      token
+    );
+
+    setIsLoggedIn(true);
+
+  }
+
+
+
+  function logout(){
+
     localStorage.removeItem("token");
-    setToken(null);
-  };
+    localStorage.removeItem("username");
+
+    setIsLoggedIn(false);
+
+  }
+
+
 
   return (
+
     <AuthContext.Provider
       value={{
-        isLoggedIn: !!token,
-        token,
+        isLoggedIn,
         login,
         logout,
       }}
     >
+
       {children}
+
     </AuthContext.Provider>
+
   );
+
 }
 
-export function useAuth() {
+
+
+export function useAuth(){
+
   return useContext(AuthContext);
+
 }
