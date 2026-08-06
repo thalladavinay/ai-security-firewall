@@ -1,11 +1,11 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Text
 from datetime import datetime
 
 from app.core.database import Base
 
 
-class Notification(Base):
-    __tablename__ = "notifications"
+class AuditEvent(Base):
+    __tablename__ = "audit_events"
 
     id = Column(
         Integer,
@@ -13,19 +13,19 @@ class Notification(Base):
         index=True
     )
 
-    title = Column(
+    event_type = Column(
         String,
         nullable=False
     )
 
-    message = Column(
-        String,
-        nullable=False
+    user_id = Column(
+        Integer,
+        nullable=True
     )
 
-    is_read = Column(
-        Boolean,
-        default=False
+    details = Column(
+        Text,
+        nullable=True
     )
 
     created_at = Column(

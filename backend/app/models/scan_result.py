@@ -1,4 +1,12 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from datetime import datetime
+
+from sqlalchemy import (
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+)
 from sqlalchemy.orm import relationship
 
 from app.core.database import Base
@@ -23,27 +31,43 @@ class Scan(Base):
         String,
         nullable=False,
         default="Pending",
+        index=True,
     )
 
     risk_score = Column(
         Integer,
         nullable=False,
         default=0,
+        index=True,
     )
 
-    # SHA-256 hash of the uploaded file
     file_hash = Column(
         String,
-        unique=True,
         nullable=False,
+        index=True,
     )
 
-    # Path to the generated PDF report
     report_path = Column(
         String,
         nullable=True,
-        default=None,
     )
+
+    created_at = Column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    )
+
+    updated_at = Column(
+        DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+        nullable=False,
+    )
+
+    # =====================================
+    # User Relationship
+    # =====================================
 
     user_id = Column(
         Integer,
@@ -54,5 +78,21 @@ class Scan(Base):
 
     user = relationship(
         "User",
+        back_populates="scans",
+    )
+
+    # =====================================
+    # Organization Relationship
+    # =====================================
+
+    organization_id = Column(
+        Integer,
+        ForeignKey("organizations.id"),
+        nullable=True,
+        index=True,
+    )
+
+    organization = relationship(
+        "Organization",
         back_populates="scans",
     )

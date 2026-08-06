@@ -1,5 +1,5 @@
+import os
 import secrets
-from urllib import request
 
 from fastapi import (
     APIRouter,
@@ -7,21 +7,20 @@ from fastapi import (
     HTTPException,
     Request,
 )
-
-from sqlalchemy.orm import Session
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.limiter import limiter
 from app.core.dependencies import get_current_user
+from app.core.limiter import limiter
 from app.core.security import (
     create_access_token,
     hash_password,
     verify_password,
 )
 
-from app.models.user import User
 from app.models.email_verification import EmailVerification
+from app.models.user import User
 
 from app.schemas.auth import Token
 from app.schemas.user import (
@@ -31,12 +30,17 @@ from app.schemas.user import (
 )
 
 from app.services.audit_logger import create_audit_log
-from app.services.notification_service import create_notification
 from app.services.email_service import send_verification_email
+from app.services.notification_service import create_notification
 
 router = APIRouter(
     prefix="/auth",
     tags=["Authentication"],
+)
+
+FRONTEND_URL = os.getenv(
+    "FRONTEND_URL",
+    "http://localhost:3000",
 )
 
 
@@ -81,17 +85,15 @@ async def register_user(
     new_user = User(
         username=user.username,
         email=user.email,
-        hashed_password=hash_password(user.password),
+        hashed_password=hash_password(
+            user.password
+        ),
         email_verified=False,
     )
 
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-
-    # ----------------------------------------
-    # Generate verification token
-    # ----------------------------------------
 
     token = secrets.token_urlsafe(32)
 
@@ -103,17 +105,9 @@ async def register_user(
     db.add(verification)
     db.commit()
 
-    # ----------------------------------------
-    # Build verification link
-    # ----------------------------------------
-
     verification_link = (
-    f"{FRONTEND_URL}/verify?token={token}"
-)
-
-    # ----------------------------------------
-    # Send verification email
-    # ----------------------------------------
+        f"{FRONTEND_URL}/verify?token={token}"
+    )
 
     try:
         await send_verification_email(
@@ -129,8 +123,13 @@ async def register_user(
         )
 
     return {
-        "message": "Registration successful. Please verify your email.",
-        "user": UserResponse.model_validate(new_user),
+        "message": (
+            "Registration successful. "
+            "Please verify your email."
+        ),
+        "user": UserResponse.model_validate(
+            new_user
+        ),
     }
 
 
@@ -145,7 +144,9 @@ def verify_email(
 ):
     verification = (
         db.query(EmailVerification)
-        .filter(EmailVerification.token == token)
+        .filter(
+            EmailVerification.token == token
+        )
         .first()
     )
 
@@ -157,7 +158,9 @@ def verify_email(
 
     user = (
         db.query(User)
-        .filter(User.email == verification.email)
+        .filter(
+            User.email == verification.email
+        )
         .first()
     )
 
@@ -171,7 +174,6 @@ def verify_email(
 
     db.add(user)
     db.delete(verification)
-
     db.commit()
 
     return {
@@ -241,14 +243,17 @@ def login_user(
 
 
 # ==================================================
-# Profile
+# Current User
 # ==================================================
 
 @router.get("/me")
 def get_profile(
-    current_user=Depends(get_current_user),
+    current_user=Depends(
+        get_current_user
+    ),
 ):
     return current_user
+
 
 # ==================================================
 # Change Password
@@ -256,13 +261,18 @@ def get_profile(
 
 @router.post("/change-password")
 def change_password(
+    request: Request,
     data: ChangePassword,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user=Depends(
+        get_current_user
+    ),
 ):
     user = (
         db.query(User)
-        .filter(User.id == current_user["id"])
+        .filter(
+            User.id == current_user["id"]
+        )
         .first()
     )
 
@@ -282,14 +292,11 @@ def change_password(
         )
 
     user.hashed_password = hash_password(
-        data.new_password,
+        data.new_password
     )
 
     db.commit()
 
-    # ----------------------------------------
-    # Audit Log
-    # ----------------------------------------
     create_audit_log(
         db=db,
         user_email=user.email,
@@ -297,9 +304,6 @@ def change_password(
         ip_address=request.client.host,
     )
 
-    # ----------------------------------------
-    # Notification
-    # ----------------------------------------
     create_notification(
         db=db,
         user_id=current_user["id"],

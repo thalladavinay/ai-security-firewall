@@ -1,16 +1,22 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
 from datetime import datetime
 
 from app.core.database import Base
 
 
-class AuditLog(Base):
-    __tablename__ = "audit_logs"
+class ActivityLog(Base):
+    __tablename__ = "activity_logs"
 
     id = Column(
         Integer,
         primary_key=True,
         index=True
+    )
+
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id"),
+        nullable=True
     )
 
     action = Column(

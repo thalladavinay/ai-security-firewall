@@ -1,11 +1,11 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text
+from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
 
 from app.core.database import Base
 
 
-class AuditLog(Base):
-    __tablename__ = "audit_logs"
+class Subscription(Base):
+    __tablename__ = "subscriptions"
 
     id = Column(
         Integer,
@@ -13,14 +13,14 @@ class AuditLog(Base):
         index=True
     )
 
-    action = Column(
+    plan = Column(
         String,
-        nullable=False
+        default="free"
     )
 
-    description = Column(
-        Text,
-        nullable=True
+    status = Column(
+        String,
+        default="active"
     )
 
     created_at = Column(
