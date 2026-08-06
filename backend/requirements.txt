@@ -13,3 +13,5 @@ bcrypt==4.0.1
 reportlab==4.4.3
 yara-python
 fastapi-mail
+slowapi
+sentry-sdk
